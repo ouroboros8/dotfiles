@@ -136,6 +136,11 @@ export FZF_DEFAULT_OPTS="--height 25% --border"
 source /usr/local/Cellar/fzf/*/shell/key-bindings.zsh
 source /usr/local/Cellar/fzf/*/shell/completion.zsh
 
+# Status checks
+alert () {
+    echo "\e[1;31m$@\e[0m"
+}
+
 # Print packages to update
 # Requires passwordless sudo:
 # <username> ALL=(ALL) NOPASSWD: /usr/bin/pacman
@@ -143,10 +148,7 @@ if grep 'Arch Linux' /etc/os-release >/dev/null 2>&1; then
     sudo pacman -Syup --print-format "%n"
 fi
 
-alert () {
-    echo "\e[1;31m$@\e[0m"
-}
-
+# Check that the dotfiles branch is for the correct platform
 check_dotfiles_branch() {
     dotfiles_dir="$HOME/.dotfiles"
     if [[ "$(uname -s)" =~ Darwin ]]; then
@@ -183,3 +185,36 @@ export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 # dedupe path array (-U is for unique array)
 typeset -aU path
 export path
+
+# Check that expected tools are installed and print a warning if they're not found
+check_for_tools() {
+    missing=()
+    for tool in $@; do
+        if ! whence "$tool" >/dev/null; then
+            missing+=("$tool")
+        fi
+    done
+    if [[ ${#missing[@]} -ne 0 ]]; then
+        alert Expected ${(j., .)missing} to be installed
+    fi
+}
+
+EXPECTED_TOOLS=(
+    curl
+    dig
+    docker
+    git
+    gpg2
+    htop
+    hub
+    nc
+    rg
+    rsync
+    rustup
+    rvm
+    shellcheck
+    tree
+    virtualenv
+)
+
+check_for_tools $EXPECTED_TOOLS
