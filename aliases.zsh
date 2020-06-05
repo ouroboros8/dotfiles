@@ -86,6 +86,10 @@ alias myip='curl -s icanhazip.com'
 alias t='true'
 alias ipgrep="rg '([0-9]{1,3}\.){3}[0-9]{1,3}(/[0-9]{1,2})?'"
 
+# Dangerous
+# These aliases are prefixed with a bare read; they require double tapping enter to execute.
+alias 'frig!'='read && git commit -a --amend --no-edit && git push -f'
+
 # Common opts
 alias grep='grep --color=auto'
 alias ls='ls --color=auto'
