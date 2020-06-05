@@ -134,6 +134,9 @@ if which pipenv >/dev/null 2>&1; then
     eval $(pipenv --completion)
 fi
 
+## poetry
+[[ -d ~/.poetry/bin/ ]] && path=( ~/.poetry/bin/ $path )
+
 ## Go
 if whichsoever go >/dev/null; then
     GOPATH="$HOME/.local/go"
