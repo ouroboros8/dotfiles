@@ -76,44 +76,6 @@ elif which hub >/dev/null 2>&1; then
     alias git=hub
 fi
 
-### Environment
-
-## gopass completion
-export fpath=( "$HOME/.local/go/share/zsh/site-functions" $fpath )
-
-## tfenv
-if [ -d "$HOME/.tfenv/" ]; then
-    path=( "$HOME/.tfenv/bin" $path )
-fi
-
-## Editor
-if which nvim >/dev/null; then
-    export EDITOR='nvim'
-else
-    export EDITOR='vim'
-fi
-
-## gpg-agent (with SSH support)
-# Some nonsense required in Fedora:
-# https://github.com/fedora-infra/ssh-gpg-smartcard-config/blob/master/YubiKey.rst
-if [ -f /etc/fedora-release ]; then
-    if [ ! -f /run/user/$(id -u)/gpg-agent.env ]; then
-        killall gpg-agent;
-        eval $(gpg-agent --daemon --enable-ssh-support > /run/user/$(id -u)/gpg-agent.env);
-    fi
-    . /run/user/$(id -u)/gpg-agent.env
-else
-    gpg-connect-agent /bye 2>&1 >/dev/null
-    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-fi
-
-## fzf (https://github.com/junegunn/fzf)
-which fzf >/dev/null || 2>&1 echo FZF not found
-which rg >/dev/null || 2>&1 echo RipGrep not found
-export FZF_DEFAULT_COMMAND='rg --hidden --files -F'
-export FZF_CTRL_T_COMMAND='rg --hidden --files -F'
-export FZF_DEFAULT_OPTS="--height 25% --border"
-
 ### Development
 
 # virtualenvwrapper
@@ -239,3 +201,42 @@ check_dotfiles_branch
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
+
+### Environment
+
+## gopass completion
+export fpath=( "$HOME/.local/go/share/zsh/site-functions" $fpath )
+
+## tfenv
+if [ -d "$HOME/.tfenv/" ]; then
+    path=( "$HOME/.tfenv/bin" $path )
+fi
+
+## Editor
+if which nvim >/dev/null; then
+    export EDITOR='nvim'
+else
+    export EDITOR='vim'
+fi
+
+## gpg-agent (with SSH support)
+# Some nonsense required in Fedora:
+# https://github.com/fedora-infra/ssh-gpg-smartcard-config/blob/master/YubiKey.rst
+if [ -f /etc/fedora-release ]; then
+    if [ ! -f /run/user/$(id -u)/gpg-agent.env ]; then
+        killall gpg-agent;
+        eval $(gpg-agent --daemon --enable-ssh-support > /run/user/$(id -u)/gpg-agent.env);
+    fi
+    . /run/user/$(id -u)/gpg-agent.env
+else
+    gpg-connect-agent /bye 2>&1 >/dev/null
+    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+fi
+
+## fzf (https://github.com/junegunn/fzf)
+which fzf >/dev/null || 2>&1 echo FZF not found
+which rg >/dev/null || 2>&1 echo RipGrep not found
+export FZF_DEFAULT_COMMAND='rg --hidden --files -F'
+export FZF_CTRL_T_COMMAND='rg --hidden --files -F'
+export FZF_DEFAULT_OPTS="--height 25% --border"
+
