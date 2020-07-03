@@ -52,7 +52,12 @@ fi
 export _Z_CMD=j
 source ~/.dotfiles/z/z.sh
 
-##### Zsh settings
+#### source work zshrc if present
+if [[ -f "$HOME/.work-dotfiles/zshrc" ]]; then
+    source "$HOME/.work-dotfiles/zshrc"
+fi
+
+#### Zsh settings
 
 ### Zsh completion help
 bindkey '^Xh' _complete_help
