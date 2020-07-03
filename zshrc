@@ -52,6 +52,9 @@ fi
 export _Z_CMD=j
 source ~/.dotfiles/z/z.sh
 
+# Scripts in $HOME/.local/bin take precedence:
+path=( "$HOME/.local/bin" $path )
+
 #### source work zshrc if present
 if [[ -f "$HOME/.work-dotfiles/zshrc" ]]; then
     source "$HOME/.work-dotfiles/zshrc"
@@ -163,13 +166,6 @@ fi
 source /usr/local/Cellar/fzf/0.20.0/shell/key-bindings.zsh
 source /usr/local/Cellar/fzf/0.20.0/shell/completion.zsh
 
-# Scripts in $HOME/.local/bin take precedence:
-path=( "$HOME/.local/bin" $path )
-
-# dedupe path array (-U is for unique array)
-typeset -aU path
-export path
-
 # Co-op SSH helper
 helper_path="$HOME/coop/dotfiles/coop_ssh"
 if [[ -f "$helper_path" ]]; then
@@ -203,9 +199,6 @@ check_dotfiles_branch() {
 }
 
 check_dotfiles_branch
-
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
 
 ### Environment
 
@@ -245,3 +238,6 @@ export FZF_DEFAULT_COMMAND='rg --hidden --files -F'
 export FZF_CTRL_T_COMMAND='rg --hidden --files -F'
 export FZF_DEFAULT_OPTS="--height 25% --border"
 
+# dedupe path array (-U is for unique array)
+typeset -aU path
+export path
