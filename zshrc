@@ -164,8 +164,8 @@ if [[ -e "$VTE_PROFILE" ]]; then
 fi
 
 # FZF
-source /usr/local/Cellar/fzf/0.20.0/shell/key-bindings.zsh
-source /usr/local/Cellar/fzf/0.20.0/shell/completion.zsh
+source /usr/local/Cellar/fzf/*/shell/key-bindings.zsh
+source /usr/local/Cellar/fzf/*/shell/completion.zsh
 
 # Co-op SSH helper
 helper_path="$HOME/coop/dotfiles/coop_ssh"
