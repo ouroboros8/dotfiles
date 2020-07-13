@@ -41,7 +41,8 @@ if [[ "$(uname -s)" =~ Darwin ]]; then
     path=( "/usr/local/opt/coreutils/libexec/gnubin" $path )
 
     # Add binaries installed with pip install --user <package> to PATH
-    path=( "$HOME/Library/Python/3.7/bin" $path )
+    latest_python3=$(ls -d "$HOME"/Library/Python/3.* | sort -t. -k2,2 -n | tail -n1)
+    path=( "$latest_python3/bin" $path )
 
     # Puppet stuff
     path=( "/opt/puppetlabs/pdk/bin" $path )
