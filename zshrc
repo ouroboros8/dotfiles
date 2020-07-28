@@ -1,7 +1,7 @@
 #### zsh/ohmyzsh
 
 # Profile zsh start speed
-# zmodload zsh/zprof
+#zmodload zsh/zprof
 
 source ~/.dotfiles/antigen/antigen.zsh
 
@@ -17,8 +17,6 @@ antigen bundle pip
 antigen bundle lein
 antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-completions
-antigen bundle Tarrasch/zsh-autoenv
-antigen bundle lukechilds/zsh-nvm
 
 antigen use oh-my-zsh
 antigen theme avit
@@ -43,9 +41,6 @@ if [[ "$(uname -s)" =~ Darwin ]]; then
     # Add binaries installed with pip install --user <package> to PATH
     latest_python3=$(ls -d "$HOME"/Library/Python/3.* | sort -t. -k2,2 -n | tail -n1)
     path=( "$latest_python3/bin" $path )
-
-    # Puppet stuff
-    path=( "/opt/puppetlabs/pdk/bin" $path )
 
 fi
 
@@ -77,31 +72,18 @@ export SAVEHIST=9999999999999999
 ### Aliases
 source ~/.dotfiles/aliases.zsh
 
-### hub (https://github.com/github/hub) and lab (https://github.com/zaquestion/lab)
-# Prefer lab because it's hub-aware
-if which lab >/dev/null 2>&1; then
-    alias git=lab
-elif which hub >/dev/null 2>&1; then
-    alias git=hub
-fi
-
 ### Development
 
 # virtualenvwrapper
 
-whichsoever() {
-    # which but don't output and unhelpful error message to stdout on failure
-    which $@ >/dev/null 2>&1 && which $@
-}
-
-virtualenvwrapper_path="$(which virtualenvwrapper.sh)"
+virtualenvwrapper_path="$(whence virtualenvwrapper.sh)"
 if [[ -f "$virtualenvwrapper_path" ]]; then
-    export VIRTUALENVWRAPPER_PYTHON="$(whichsoever python3 || whichsoever python)"
+    export VIRTUALENVWRAPPER_PYTHON="$(whence python3 || whence python)"
     export WORKON_HOME=~/.virtualenvs
     source "$virtualenvwrapper_path"
 fi
 # ... and pipenv completion
-if which pipenv >/dev/null 2>&1; then
+if whence pipenv >/dev/null ; then
     eval $(pipenv --completion)
 fi
 
@@ -109,7 +91,7 @@ fi
 [[ -d ~/.poetry/bin/ ]] && path=( ~/.poetry/bin/ $path )
 
 ## Go
-if whichsoever go >/dev/null; then
+if whence go >/dev/null; then
     GOPATH="$HOME/.local/go"
     mkdir -p $GOPATH
     export GOPATH
@@ -120,7 +102,7 @@ fi
 if [ -d "$HOME/.cargo/" ]; then
     path=( "$HOME/.cargo/bin" $path )
 
-    if which rustup >/dev/null 2>&1; then
+    if whence rustup >/dev/null; then
         default_toolchain=$(\
             rustup show \
             | grep '(default)' \
@@ -139,39 +121,20 @@ if [ -d "$HOME/.perl6/" ]; then
     path=( "$HOME/.perl6/bin" $path )
 fi
 
-## RVM
-# Load RVM into a shell session *as a function*
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
-
 ## Jenv
 if [ -d "$HOME/.jenv/" ]; then
     export path=( "$HOME/.jenv/bin" $path )
     eval "$(jenv init -)"
 fi
 
-# Serverless Framework
-serverless_home="/home/dan/.nvm/versions/node/v11.10.0/lib/node_modules/serverless"
-if [[ -f "$serverless_home" ]]; then
-    source "$serverless_home/node_modules/tabtab/.completions/serverless.zsh"
-    source "$serverless_home/node_modules/tabtab/.completions/sls.zsh"
-    source "$serverless_home/node_modules/tabtab/.completions/slss.zsh"
-fi
-
-## Fix VTE issue (for Tilix): https://gnunn1.github.io/tilix-web/manual/vteconfig/
-VTE_PROFILE=/etc/profile.d/vte.sh
-if [[ -e "$VTE_PROFILE" ]]; then
-    source /etc/profile.d/vte.sh
-fi
-
-# FZF
+## fzf (https://github.com/junegunn/fzf)
+whence fzf >/dev/null || 2>&1 echo FZF not found
+whence rg >/dev/null || 2>&1 echo RipGrep not found
+export FZF_DEFAULT_COMMAND='rg --hidden --files -F'
+export FZF_CTRL_T_COMMAND='rg --hidden --files -F'
+export FZF_DEFAULT_OPTS="--height 25% --border"
 source /usr/local/Cellar/fzf/*/shell/key-bindings.zsh
 source /usr/local/Cellar/fzf/*/shell/completion.zsh
-
-# Co-op SSH helper
-helper_path="$HOME/coop/dotfiles/coop_ssh"
-if [[ -f "$helper_path" ]]; then
-    source "$helper_path"
-fi
 
 # Print packages to update
 # Requires passwordless sudo:
@@ -206,38 +169,16 @@ check_dotfiles_branch
 ## gopass completion
 export fpath=( "$HOME/.local/go/share/zsh/site-functions" $fpath )
 
-## tfenv
-if [ -d "$HOME/.tfenv/" ]; then
-    path=( "$HOME/.tfenv/bin" $path )
-fi
-
 ## Editor
-if which nvim >/dev/null; then
+if whence nvim >/dev/null; then
     export EDITOR='nvim'
 else
     export EDITOR='vim'
 fi
 
 ## gpg-agent (with SSH support)
-# Some nonsense required in Fedora:
-# https://github.com/fedora-infra/ssh-gpg-smartcard-config/blob/master/YubiKey.rst
-if [ -f /etc/fedora-release ]; then
-    if [ ! -f /run/user/$(id -u)/gpg-agent.env ]; then
-        killall gpg-agent;
-        eval $(gpg-agent --daemon --enable-ssh-support > /run/user/$(id -u)/gpg-agent.env);
-    fi
-    . /run/user/$(id -u)/gpg-agent.env
-else
-    gpg-connect-agent /bye 2>&1 >/dev/null
-    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-fi
-
-## fzf (https://github.com/junegunn/fzf)
-which fzf >/dev/null || 2>&1 echo FZF not found
-which rg >/dev/null || 2>&1 echo RipGrep not found
-export FZF_DEFAULT_COMMAND='rg --hidden --files -F'
-export FZF_CTRL_T_COMMAND='rg --hidden --files -F'
-export FZF_DEFAULT_OPTS="--height 25% --border"
+gpg-connect-agent /bye 2>&1 >/dev/null
+export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 
 # dedupe path array (-U is for unique array)
 typeset -aU path
