@@ -146,18 +146,6 @@ alert () {
     echo "\e[1;31m$@\e[0m"
 }
 
-# Status checks
-alert () {
-    echo "\e[1;31m$@\e[0m"
-}
-
-# Print packages to update
-# Requires passwordless sudo:
-# <username> ALL=(ALL) NOPASSWD: /usr/bin/pacman
-if grep 'Arch Linux' /etc/os-release >/dev/null 2>&1; then
-    sudo pacman -Syup --print-format "%n"
-fi
-
 # Check that the dotfiles branch is for the correct platform
 check_dotfiles_branch() {
     dotfiles_dir="$HOME/.dotfiles"
@@ -196,6 +184,15 @@ export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 typeset -aU path
 export path
 
+## Upkeep
+
+# Print packages to update
+# Requires passwordless sudo:
+# <username> ALL=(ALL) NOPASSWD: /usr/bin/pacman
+if grep 'Arch Linux' /etc/os-release >/dev/null 2>&1; then
+    sudo pacman -Syup --print-format "%n"
+fi
+
 # Check that expected tools are installed and print a warning if they're not found
 check_for_tools() {
     missing=()
@@ -213,15 +210,16 @@ EXPECTED_TOOLS=(
     curl
     dig
     docker
+    fd
     git
     gpg2
     htop
     hub
     nc
+    rbenv
     rg
     rsync
     rustup
-    rvm
     shellcheck
     tree
     virtualenv
