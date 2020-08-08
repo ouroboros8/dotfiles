@@ -133,8 +133,18 @@ whence rg >/dev/null || 2>&1 echo RipGrep not found
 export FZF_DEFAULT_COMMAND='rg --hidden --files -F'
 export FZF_CTRL_T_COMMAND='rg --hidden --files -F'
 export FZF_DEFAULT_OPTS="--height 25% --border"
-source /usr/local/Cellar/fzf/*/shell/key-bindings.zsh
-source /usr/local/Cellar/fzf/*/shell/completion.zsh
+if [[ -d /usr/share/fzf ]]; then
+    source /usr/share/fzf/key-bindings.zsh
+    source /usr/share/fzf/completion.zsh
+elif [[ -d /usr/local/Cellar/fzf ]]; then
+    source /usr/local/Cellar/fzf/*/shell/key-bindings.zsh
+    source /usr/local/Cellar/fzf/*/shell/completion.zsh
+fi
+
+# Status checks
+alert () {
+    echo "\e[1;31m$@\e[0m"
+}
 
 # Status checks
 alert () {
