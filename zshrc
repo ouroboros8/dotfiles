@@ -141,29 +141,6 @@ elif [[ -d /usr/local/Cellar/fzf ]]; then
     source /usr/local/Cellar/fzf/*/shell/completion.zsh
 fi
 
-# Status checks
-alert () {
-    echo "\e[1;31m$@\e[0m"
-}
-
-# Check that the dotfiles branch is for the correct platform
-check_dotfiles_branch() {
-    dotfiles_dir="$HOME/.dotfiles"
-    if [[ "$(uname -s)" =~ Darwin ]]; then
-        if [[ "$(cd $dotfiles_dir && git branch | grep '^\*' | cut -d' ' -f2)" != "osx" ]]; then
-            alert "WARNING: not on osx-specific branch"
-            alert "Switch to osx branch and restart the shell"
-        fi
-    else
-        if [[ "$(cd $dotfiles_dir && git branch | grep '^\*' | cut -d' ' -f2)" == "osx" ]]; then
-            alert "WARNING: on osx-specific branch, but this doesn't appears to be osx"
-            alert "Switch to master branch and restart the shell"
-        fi
-    fi
-}
-
-check_dotfiles_branch
-
 ### Environment
 
 ## gopass completion
@@ -184,7 +161,11 @@ export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 typeset -aU path
 export path
 
-## Upkeep
+## Status checks
+
+alert () {
+    echo "\e[1;31m$@\e[0m"
+}
 
 # Print packages to update
 # Requires passwordless sudo:
@@ -192,6 +173,24 @@ export path
 if grep 'Arch Linux' /etc/os-release >/dev/null 2>&1; then
     sudo pacman -Syup --print-format "%n"
 fi
+
+# Check that the dotfiles branch is for the correct platform
+check_dotfiles_branch() {
+    dotfiles_dir="$HOME/.dotfiles"
+    if [[ "$(uname -s)" =~ Darwin ]]; then
+        if [[ "$(cd $dotfiles_dir && git branch | grep '^\*' | cut -d' ' -f2)" != "osx" ]]; then
+            alert "WARNING: not on osx-specific branch"
+            alert "Switch to osx branch and restart the shell"
+        fi
+    else
+        if [[ "$(cd $dotfiles_dir && git branch | grep '^\*' | cut -d' ' -f2)" == "osx" ]]; then
+            alert "WARNING: on osx-specific branch, but this doesn't appears to be osx"
+            alert "Switch to master branch and restart the shell"
+        fi
+    fi
+}
+
+check_dotfiles_branch
 
 # Check that expected tools are installed and print a warning if they're not found
 check_for_tools() {
