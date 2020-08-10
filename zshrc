@@ -211,9 +211,7 @@ EXPECTED_TOOLS=(
     docker
     fd
     git
-    gpg2
     htop
-    hub
     nc
     rbenv
     rg
