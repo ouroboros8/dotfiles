@@ -44,9 +44,8 @@ if [[ "$(uname -s)" =~ Darwin ]]; then
 
 fi
 
-#### z (https://github.com/rupa/z)
-export _Z_CMD=j
-source ~/.dotfiles/z/z.sh
+#### zoxide
+eval "$(zoxide init --cmd j zsh)"
 
 # Scripts in $HOME/.local/bin take precedence:
 path=( "$HOME/.local/bin" $path )
@@ -210,6 +209,7 @@ EXPECTED_TOOLS=(
     dig
     docker
     fd
+    fzf
     git
     htop
     nc
@@ -220,6 +220,7 @@ EXPECTED_TOOLS=(
     shellcheck
     tree
     virtualenv
+    zoxide
 )
 
 check_for_tools $EXPECTED_TOOLS
