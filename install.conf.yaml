@@ -15,7 +15,7 @@
       stderr: true
 
 - link:
-    # vim
+    # vim
     ~/.config/nvim/init.vim: nvim/init.vim
 
     # tmux
@@ -31,23 +31,14 @@
     # GPG
     ~/.gnupg/gpg-agent.conf: gnupg/gpg-agent.conf
 
-    # specemacs
-    ~/.spacemacs: spacemacs
-
-    # ansible
-    ~/.ansible.cfg: ansible.cfg
-
     # pylint
-    ~/.pylintrc: pylintrc
+    ~/.pylintrc: python/pylintrc
 
     # flake8
-    ~/.config/flake8: flake8
+    ~/.config/flake8: python/flake8
 
     # gopass
     ~/.config/gopass/config.yml: gopass/config.yml
-
-    # virtualenvwrapper
-    ~/.virtualenvs/postmkvirtualenv: virtualenvs/postmkvirtualenv
 
     # utils
     ~/.local/bin/:

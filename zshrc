@@ -1,6 +1,8 @@
-#### zsh/ohmyzsh
+# =================================
+# == ZSH/ohmyzsh initianlisation ==
+# =================================
 
-# Profile zsh start speed
+# Toggle the comment below to profile zsh start speed
 #zmodload zsh/zprof
 
 source ~/.dotfiles/antigen/antigen.zsh
@@ -23,9 +25,21 @@ antigen theme avit
 
 antigen apply
 
-# In which I wrestle with various dumb OSX things
-if [[ "$(uname -s)" =~ Darwin ]]; then
 
+# =======================
+# == Utility functions ==
+# =======================
+
+alert () {
+    echo "\e[1;31m$@\e[0m"
+}
+
+
+# ===============
+# == OSX hacks ==
+# ===============
+
+if [[ "$(uname -s)" =~ Darwin ]]; then
     # /usr/libexec/path_helper is path unhelpful
     path=(
         "/usr/local/bin"
@@ -38,40 +52,31 @@ if [[ "$(uname -s)" =~ Darwin ]]; then
     # Use GNU tools not crappy BSD ones
     path=( "/usr/local/opt/coreutils/libexec/gnubin" $path )
 
-    # Add binaries installed with pip install --user <package> to PATH
-    latest_python3=$(ls -d "$HOME"/Library/Python/3.* | sort -t. -k2,2 -n | tail -n1)
+    # Add python user packages (installed with pip install --user <package>) to PATH
+    latest_python3=$(ls -d ~/Library/Python/3.* | sort -t. -k2,2 -n | tail -n1)
     path=( "$latest_python3/bin" $path )
-
 fi
 
-#### zoxide
-eval "$(zoxide init --cmd j zsh)"
 
-# Scripts in $HOME/.local/bin take precedence:
-path=( "$HOME/.local/bin" $path )
+# ========================
+# == ZSH settings ==
+# ========================
 
-#### source work zshrc if present
-if [[ -f "$HOME/.work-dotfiles/zshrc" ]]; then
-    source "$HOME/.work-dotfiles/zshrc"
-fi
-
-#### Zsh settings
-
-### Zsh completion help
+# Zsh completion help
 bindkey '^Xh' _complete_help
 
-### Incremental search
+# Incremental search
 bindkey '^R' history-incremental-pattern-search-backward
 bindkey '^F' history-incremental-pattern-search-forward
 
-### Biggest history
+# Biggest history
 export HISTSIZE=9999999999999999 # LONG_MAX (64-bit)
 export SAVEHIST=9999999999999999
 
-### Aliases
-source ~/.dotfiles/aliases.zsh
 
-### Development
+# ======================
+# == Dev environments ==
+# ======================
 
 # virtualenvwrapper
 
@@ -122,28 +127,77 @@ fi
 
 ## Jenv
 if [ -d "$HOME/.jenv/" ]; then
-    export path=( "$HOME/.jenv/bin" $path )
+    path=( "$HOME/.jenv/bin" $path )
     eval "$(jenv init -)"
 fi
 
-## fzf (https://github.com/junegunn/fzf)
-whence fzf >/dev/null || 2>&1 echo FZF not found
-whence rg >/dev/null || 2>&1 echo RipGrep not found
-export FZF_DEFAULT_COMMAND='rg --hidden --files -F'
-export FZF_CTRL_T_COMMAND='rg --hidden --files -F'
-export FZF_DEFAULT_OPTS="--height 25% --border"
-if [[ -d /usr/share/fzf ]]; then
-    source /usr/share/fzf/key-bindings.zsh
-    source /usr/share/fzf/completion.zsh
-elif [[ -d /usr/local/Cellar/fzf ]]; then
-    source /usr/local/Cellar/fzf/*/shell/key-bindings.zsh
-    source /usr/local/Cellar/fzf/*/shell/completion.zsh
+## Ruby
+if [ -d ~/.rbenv/bin ]; then
+    path=( "$HOME/.rbenv/bin" $path)
+    eval "$(rbenv init -)"
 fi
 
-### Environment
 
-## gopass completion
-export fpath=( "$HOME/.local/go/share/zsh/site-functions" $fpath )
+#=================
+#== Power Tools ==
+#=================
+
+# Inventory the toolbox
+expected_tools=(
+    # Essentials
+    git
+    docker
+    shellcheck
+    htop
+    tree
+
+    # Networking
+    curl
+    nc
+    dig
+    rsync
+
+    # Power tools
+    rg
+    fzf
+    fd
+    zoxide
+)
+
+missing=()
+for tool in $@; do
+    if ! whence "$tool" >/dev/null; then
+        missing+=("$tool")
+    fi
+done
+if [[ ${#missing[@]} -ne 0 ]]; then
+    alert Expected ${(j., .)missing} to be installed
+fi
+
+# fzf (https://github.com/junegunn/fzf)
+if whence fzf >/dev/null; then
+    export FZF_DEFAULT_OPTS="--height 25% --border"
+    if whence rg >/dev/null; then
+        export FZF_DEFAULT_COMMAND='rg --hidden --files -F'
+        export FZF_CTRL_T_COMMAND='rg --hidden --files -F'
+    fi
+    if [[ -d /usr/share/fzf ]]; then
+        source /usr/share/fzf/key-bindings.zsh
+        source /usr/share/fzf/completion.zsh
+    elif [[ -d /usr/local/Cellar/fzf ]]; then
+        # This glob is hacky but we should only have one fzf version intalled
+        source /usr/local/Cellar/fzf/*/shell/key-bindings.zsh
+        source /usr/local/Cellar/fzf/*/shell/completion.zsh
+    fi
+fi
+
+# zoxide
+eval "$(zoxide init --cmd j zsh)"
+
+
+#=================
+#== Environment ==
+#=================
 
 ## Editor
 if whence nvim >/dev/null; then
@@ -156,71 +210,54 @@ fi
 gpg-connect-agent /bye 2>&1 >/dev/null
 export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 
+## gopass completion
+export fpath=( "$HOME/.local/go/share/zsh/site-functions" $fpath )
+
+
+# ==============
+# == Includes ==
+# ==============
+
+# work config
+if [[ -f "$HOME/.work-dotfiles/zshrc" ]]; then
+    source "$HOME/.work-dotfiles/zshrc"
+fi
+
+# aliases
+source ~/.dotfiles/aliases.zsh
+
+
+# ==================
+# == Final checks ==
+# ==================
+
+# Scripts in ~/.local/bin take precedence:
+path=( ~/.local/bin $path )
+
 # dedupe path array (-U is for unique array)
 typeset -aU path
 export path
 
-## Status checks
-
-alert () {
-    echo "\e[1;31m$@\e[0m"
-}
-
 # Print packages to update
-# Requires passwordless sudo:
-# <username> ALL=(ALL) NOPASSWD: /usr/bin/pacman
+# requires passwordless sudo: <username> ALL=(ALL) NOPASSWD: /usr/bin/pacman
 if grep 'Arch Linux' /etc/os-release >/dev/null 2>&1; then
     sudo pacman -Syup --print-format "%n"
 fi
 
-# Check that the dotfiles branch is for the correct platform
-check_dotfiles_branch() {
-    dotfiles_dir="$HOME/.dotfiles"
-    if [[ "$(uname -s)" =~ Darwin ]]; then
-        if [[ "$(cd $dotfiles_dir && git branch | grep '^\*' | cut -d' ' -f2)" != "osx" ]]; then
-            alert "WARNING: not on osx-specific branch"
-            alert "Switch to osx branch and restart the shell"
-        fi
-    else
-        if [[ "$(cd $dotfiles_dir && git branch | grep '^\*' | cut -d' ' -f2)" == "osx" ]]; then
-            alert "WARNING: on osx-specific branch, but this doesn't appears to be osx"
-            alert "Switch to master branch and restart the shell"
-        fi
+# Check that the dotfiles branch is correct for platform
+dotfiles_dir="$HOME/.dotfiles"
+if [[ "$(uname -s)" =~ Darwin ]]; then
+    if [[ "$(cd $dotfiles_dir && git branch | grep '^\*' | cut -d' ' -f2)" != "osx" ]]; then
+        alert "WARNING: not on osx-specific branch"
+        alert "Switch to osx branch and restart the shell"
     fi
-}
-
-check_dotfiles_branch
-
-# Check that expected tools are installed and print a warning if they're not found
-check_for_tools() {
-    missing=()
-    for tool in $@; do
-        if ! whence "$tool" >/dev/null; then
-            missing+=("$tool")
-        fi
-    done
-    if [[ ${#missing[@]} -ne 0 ]]; then
-        alert Expected ${(j., .)missing} to be installed
+else
+    if [[ "$(cd $dotfiles_dir && git branch | grep '^\*' | cut -d' ' -f2)" == "osx" ]]; then
+        alert "WARNING: on osx-specific branch, but this doesn't appears to be osx"
+        alert "Switch to master branch and restart the shell"
     fi
-}
+fi
 
-EXPECTED_TOOLS=(
-    curl
-    dig
-    docker
-    fd
-    fzf
-    git
-    htop
-    nc
-    rbenv
-    rg
-    rsync
-    rustup
-    shellcheck
-    tree
-    virtualenv
-    zoxide
-)
-
-check_for_tools $EXPECTED_TOOLS
+if [[ "$(tmux display-message -p '#S' 2>/dev/null)" == "stream" ]]; then
+    HISTFILE=~/.stream_zsh_history
+fi
