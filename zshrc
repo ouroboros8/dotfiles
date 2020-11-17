@@ -91,6 +91,10 @@ if whence pipenv >/dev/null ; then
     eval $(pipenv --completion)
 fi
 
+if whence pyenv >/dev/null ; then
+    eval "$(pyenv init -)"
+fi
+
 ## poetry
 [[ -d ~/.poetry/bin/ ]] && path=( ~/.poetry/bin/ $path )
 
