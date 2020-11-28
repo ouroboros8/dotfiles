@@ -78,6 +78,7 @@ done
 
 # Convenience
 alias c='cd'
+alias g='git'
 alias k='kubectl'
 alias l='ls -lh'
 alias la='ls -lha'
