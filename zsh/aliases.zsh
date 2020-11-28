@@ -70,7 +70,7 @@ git-purge () {
 }
 
 # Die aliases
-for n in $(seq 2 20); do
+for n in 4 6 8 10 12 20; do
   alias d$n="dn $n"
 done
 
@@ -108,11 +108,12 @@ alias ivm='vim'
 alias gs='g s'
 
 # Docker
-alias centos='docker run -it --rm centos /bin/bash'
 alias ubuntu='docker run -it --rm ubuntu /bin/bash'
+alias centos='docker run -it --rm centos /bin/bash'
+alias atestalias='echo test'
 
 # OSX
-if [[ "$(uname)" == "Darwin" ]]; then
+if [[ "$OSTYPE" =~ darwin ]]; then
     alias find='gfind'
     alias sed='gsed'
     alias tar='gtar'

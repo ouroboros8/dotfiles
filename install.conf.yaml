@@ -26,7 +26,7 @@
     ~/.gitignore: git/gitignore
 
     # zsh
-    ~/.zshrc: zshrc
+    ~/.zshrc: zsh/zshrc
 
     # GPG
     ~/.gnupg/gpg-agent.conf: gnupg/gpg-agent.conf
