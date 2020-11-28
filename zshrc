@@ -245,7 +245,10 @@ export path
 # Print packages to update
 # requires passwordless sudo: <username> ALL=(ALL) NOPASSWD: /usr/bin/pacman
 if grep 'Arch Linux' /etc/os-release >/dev/null 2>&1; then
-    sudo pacman -Syup --print-format "%n"
+    if [[ $(find .checked-updates -mtime +1 -print) ]]; then
+        sudo pacman -Syup --print-format "%n"
+        touch .checked-updates
+    fi
 fi
 
 # Check that the dotfiles branch is correct for platform
