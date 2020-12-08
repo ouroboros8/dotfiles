@@ -47,10 +47,6 @@ Plug 'dense-analysis/ale'                                                " Async
 
 call plug#end()
 
-"" Python 3
-let g:python3_host_prog = $HOME . '/.virtualenvs/pynvim-python3/bin/python'
-let g:python_host_prog =  $HOME . '/.virtualenvs/pynvim-python2/bin/python'
-
 "" deoplete
 let g:deoplete#enable_at_startup = 1
 " While pop-up menu is visible, TAB should cycle through autocomplete options.
