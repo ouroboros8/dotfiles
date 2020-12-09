@@ -47,6 +47,10 @@ Plug 'dense-analysis/ale'                                                " Async
 
 call plug#end()
 
+"" python with pyenv
+let g:python_host_prog = $HOME . "/.pyenv/versions/neovim2/bin/python"
+let g:python3_host_prog = $HOME . "/.pyenv/versions/neovim3/bin/python"
+
 "" deoplete
 let g:deoplete#enable_at_startup = 1
 " While pop-up menu is visible, TAB should cycle through autocomplete options.
