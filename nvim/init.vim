@@ -23,27 +23,32 @@ Plug 'tpope/vim-fugitive'                                                " Git i
 
 "" Enhancements
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }            " Completion
-Plug 'tpope/vim-commentary'                                              " Code comments
-Plug 'tpope/vim-unimpaired'                                              " Various mappings
-Plug 'svermeulen/vim-cutlass'                                            " Blackhole deletion
-Plug 'svermeulen/vim-subversive'                                         " Substitute motions
-Plug 'tpope/vim-repeat'                                                  " Repeat (. operator) support for plugins
-Plug 'tpope/vim-surround'                                                " Enclose text with brackets/quotes/tags/etc.
-Plug 'mhinz/vim-signify'                                                 " Show VCS add/change/deletes
 Plug 'junegunn/fzf'                                                      " Fuzzy finder
 Plug 'junegunn/fzf.vim'                                                  " Vim functions for FZF
+Plug 'mhinz/vim-signify'                                                 " Show VCS add/change/deletes
+Plug 'svermeulen/vim-cutlass'                                            " Blackhole deletion
+Plug 'svermeulen/vim-subversive'                                         " Substitute motions
+Plug 'tmux-plugins/vim-tmux'
+Plug 'tpope/vim-commentary'                                              " Code comments
+Plug 'tpope/vim-repeat'                                                  " Repeat (. operator) support for plugins
+Plug 'tpope/vim-surround'                                                " Enclose text with brackets/quotes/tags/etc.
+Plug 'tpope/vim-unimpaired'                                              " Various mappings
 
 "" Language-specific
+" terraform
 Plug 'hashivim/vim-terraform'
+" clojure
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'guns/vim-sexp'
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
+" tex
 Plug 'lervag/vimtex'
-Plug 'kchmck/vim-coffee-script'
-Plug 'tmux-plugins/vim-tmux'
+" JavaScript, TypeScript and JSX
 Plug 'yuezk/vim-js'
 Plug 'HerringtonDarkholme/yats.vim'
 Plug 'maxmellon/vim-jsx-pretty'
+" coffeescript
+Plug 'kchmck/vim-coffee-script'
 
 "" Linting
 Plug 'dense-analysis/ale'                                                " Async linter for nvim/vim8
@@ -170,7 +175,7 @@ augroup Jenkinsfile
 augroup END
 
 " Various: 2 space tabstop
-autocmd FileType javascript,html,css,ruby,yaml,lua,sh,terraform,Jenkinsfile,coffee setlocal tabstop=2
+autocmd FileType javascript,typescript,typescriptreact,html,css,ruby,yaml,lua,sh,terraform,Jenkinsfile,coffee setlocal tabstop=2
 
 " Set spell checking on appropriate filetypes:
 autocmd FileType markdown,text setlocal spell
