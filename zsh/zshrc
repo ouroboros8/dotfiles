@@ -237,12 +237,15 @@ fi
 
 # Check that the dotfiles branch is correct for platform
 branch="$(cd "$HOME/.dotfiles" && git rev-parse --abbrev-ref HEAD)"
-if [[ "$OSTYPE" =~ darwin ]] && [[ "$branch" != "osx" ]]; then
-    alert "WARNING: not on osx-specific branch"
-    alert "Switch to osx branch and restart the shell"
-elif [[ "$branch" == "osx" ]]; then
-    alert "WARNING: on osx-specific branch, but this doesn't appears to be osx"
-    alert "Switch to master branch and restart the shell"
+if [[ "$OSTYPE" =~ darwin ]]; then
+    wanted_branch="osx"
+    os_warning="WARNING: not on osx-specific branch\nSwitch to osx branch and restart the shell"
+else
+    wanted_branch="main"
+    os_warning="WARNING: on osx-specific branch, but this doesn't appears to be osx\nSwitch to master branch and restart the shell"
+fi
+if [[ "$branch" != "$wanted_branch" ]]; then
+    alert "$os_warning"
 fi
 
 # End per-line profiling
