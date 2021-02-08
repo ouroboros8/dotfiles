@@ -17,6 +17,9 @@
 - link:
     # vim
     ~/.config/nvim/init.vim: nvim/init.vim
+    ~/.config/nvim/ftplugin/:
+      glob: true
+      path: nvim/ftplugin/*
 
     # tmux
     ~/.tmux.conf: tmux.conf

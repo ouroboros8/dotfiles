@@ -118,7 +118,7 @@ nmap <Leader>lv :VimtexView
 set showmatch
 set matchtime=2 " i.e. 2/10 second jump
 
-" Expand tabs to 4 spaces
+" Expand tabs to 4 spaces unless overridden by a filetype plugin
 set expandtab
 set tabstop=4
 set shiftwidth=0 " use value of tabstop
@@ -132,8 +132,7 @@ set list
 set number relativenumber
 
 " Underline search matches
-autocmd ColorScheme * highlight Search cterm=underline ctermfg=None ctermbg=None
-autocmd ColorScheme * highlight Search gui=underline guifg=None guibg=None
+highlight Search gui=underline guifg=None guibg=None
 
 " Highlight cursor line and collumn
 set cursorline
@@ -152,20 +151,8 @@ set noswapfile
 
 """" FileTypes
 
-" Python: show PEP8 code/comment widths, set textwidth to code width
-autocmd FileType python setlocal colorcolumn=79
-
-" Text: don't number lines, wrap to 120
-autocmd FileType text setlocal nonumber colorcolumn=120 textwidth=120
-
-" Various: use tabs
-autocmd FileType go,c setlocal noexpandtab
-
 " Themes: set the filetype on oh-my-zsh themes to zsh
 autocmd BufRead,BufNewFile *.zsh-theme setfiletype zsh
-
-" Markdown: wrap at 80
-autocmd FileType markdown setlocal colorcolumn=120
 
 " Vagrantfile: treat as ruby
 augroup vagrant
@@ -196,6 +183,8 @@ set mouse=a
 " ALE
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
+" Set this variable to 1 to fix files when you save them.
+let g:ale_fix_on_save = 1
 
 " FZF
 " Find in current buffer's directory
