@@ -1,34 +1,12 @@
-root:
-  askformore: false
-  autoimport: true
-  autosync: true
-  cliptimeout: 15
-  cryptobackend: gpg
-  nocolor: false
-  noconfirm: false
-  nopager: false
-  path: ~/.password-store
-  safecontent: false
-  storebackend: fs
-  syncbackend: git
-  usesymbols: false
-  nocolor: false
-  notify: false
+autoclip: false
+autoimport: true
+cliptimeout: 15
+exportkeys: false
+mime: true
+nocolor: false
+nopager: false
+notifications: false
+path: /Users/daniels/.password-store
+safecontent: false
 mounts:
-  personal:
-    askformore: false
-    autoimport: true
-    autosync: true
-    cliptimeout: 15
-    cryptobackend: gpg
-    nocolor: false
-    noconfirm: false
-    nopager: false
-    path: ~/.password-store-personal
-    safecontent: false
-    storebackend: fs
-    syncbackend: git
-    usesymbols: false
-    nocolor: false
-    notify: false
-version: 1.6.11
+  personal: /Users/daniels/.password-store-personal
