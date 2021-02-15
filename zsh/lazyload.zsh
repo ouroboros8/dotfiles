@@ -36,8 +36,3 @@ rbenv () {
         eval "$(rbenv init -)"
     fi
 }
-
-j () {
-    eval "$(zoxide init --cmd j zsh)"
-    j "$@"
-}

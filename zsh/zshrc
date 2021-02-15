@@ -179,6 +179,9 @@ if whence fzf >/dev/null; then
     fi
 fi
 
+eval "$(zoxide init --cmd j zsh)"
+# Prevent the zoxide `q` alias with j as the command name overloading jq, the handy json processor
+unalias jq
 
 #=================
 #== Environment ==
