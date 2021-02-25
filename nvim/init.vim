@@ -41,6 +41,9 @@ Plug 'tpope/vim-sexp-mappings-for-regular-people'
 Plug 'lervag/vimtex'
 Plug 'kchmck/vim-coffee-script'
 Plug 'tmux-plugins/vim-tmux'
+Plug 'yuezk/vim-js'
+Plug 'HerringtonDarkholme/yats.vim'
+Plug 'maxmellon/vim-jsx-pretty'
 
 "" Linting
 Plug 'dense-analysis/ale'                                                " Async linter for nvim/vim8
