@@ -94,6 +94,9 @@ export SAVEHIST=9999999999999999
 # virtualenvwrapper
 
 if whence pyenv >/dev/null ; then
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init --path)"
     eval "$(pyenv init -)"
 fi
 
@@ -180,8 +183,6 @@ if whence fzf >/dev/null; then
 fi
 
 eval "$(zoxide init --cmd j zsh)"
-# Prevent the zoxide `q` alias with j as the command name overloading jq, the handy json processor
-unalias jq
 
 #=================
 #== Environment ==
